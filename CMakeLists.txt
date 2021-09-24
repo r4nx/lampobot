@@ -12,16 +12,6 @@ find_package(Boost COMPONENTS system REQUIRED)
 find_package(CURL)
 find_package(Lua REQUIRED)
 find_package(SQLite3 REQUIRED)
-include_directories(/usr/local/include ${OPENSSL_INCLUDE_DIR} ${Boost_INCLUDE_DIR})
-
-if (CURL_FOUND)
-    include_directories(${CURL_INCLUDE_DIRS})
-    add_definitions(-DHAVE_CURL)
-endif()
-
-if (LUA_FOUND)
-    include_directories(${LUA_INCLUDE_DIR})
-endif()
 
 include(FetchContent)
 
