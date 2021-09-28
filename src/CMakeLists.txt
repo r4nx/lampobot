@@ -1,5 +1,8 @@
 add_executable(lampobot
     "main.cpp"
+    "abstract_script.hpp"
+    "lua_script.hpp"
+    "lua_script.cpp"
 )
 
 target_compile_features(lampobot PRIVATE cxx_std_20)
