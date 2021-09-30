@@ -3,6 +3,10 @@ add_executable(lampobot
     "abstract_script.hpp"
     "lua_script.hpp"
     "lua_script.cpp"
+    "sqlite/sqlite_db.hpp"
+    "sqlite/sqlite_db.cpp"
+    "sqlite/sqlite_statement.hpp"
+    "sqlite/sqlite_statement.cpp"
 )
 
 target_compile_features(lampobot PRIVATE cxx_std_20)
