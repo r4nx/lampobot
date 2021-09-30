@@ -7,13 +7,7 @@ add_executable(lampobot
 
 target_compile_features(lampobot PRIVATE cxx_std_20)
 
-target_include_directories(lampobot PRIVATE
-    ${OPENSSL_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIR}
-)
-
 if (CURL_FOUND)
-    target_include_directories(lampobot PRIVATE ${CURL_INCLUDE_DIRS})
     target_compile_definitions(lampobot PRIVATE HAVE_CURL)
 endif()
 
@@ -22,12 +16,14 @@ if (LUA_FOUND)
 endif()
 
 target_link_libraries(lampobot
-    ${CMAKE_THREAD_LIBS_INIT}
-    ${OPENSSL_LIBRARIES}
-    ${Boost_LIBRARIES}
-    ${CURL_LIBRARIES}
-    ${LUA_LIBRARIES}
+    Threads::Threads
+    OpenSSL::SSL
+    OpenSSL::Crypto
+    Boost::boost
+    Boost::system
+    CURL::libcurl
     TgBot
     sol2::sol2
     SQLite::SQLite3
+    ${LUA_LIBRARIES}
 )

@@ -9,7 +9,7 @@ set(Boost_USE_MULTITHREADED ON)
 find_package(Threads REQUIRED)
 find_package(OpenSSL REQUIRED)
 find_package(Boost COMPONENTS system REQUIRED)
-find_package(CURL)
+find_package(CURL REQUIRED)
 find_package(Lua REQUIRED)
 find_package(SQLite3 REQUIRED)
 
