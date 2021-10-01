@@ -14,7 +14,7 @@ class Database {
     using db_ptr_t = std::unique_ptr<sqlite3, decltype(&sqlite3_close_v2)>;
 
 public:
-    Database(
+    explicit Database(
         const std::filesystem::path &db_file,
         int                          flags = SQLITE_OPEN_READWRITE);
 

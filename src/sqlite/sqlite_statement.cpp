@@ -31,14 +31,25 @@ Statement::Statement(const Database &db, const std::string &sql)
     stmt_.reset(raw_stmt);
 }
 
-bool Statement::bind_by_index(std::size_t param_index, int param)
+bool Statement::bind_by_index(std::size_t param_index, int param) noexcept
 {
     return sqlite3_bind_int(stmt_.get(), param_index, param) == SQLITE_OK;
 }
 
-bool Statement::bind_by_index(std::size_t param_index, double param)
+bool Statement::bind_by_index(std::size_t param_index, double param) noexcept
 {
     return sqlite3_bind_double(stmt_.get(), param_index, param) == SQLITE_OK;
+}
+
+bool Statement::step()
+{
+    const int res = sqlite3_step(stmt_.get());
+
+    if (res != SQLITE_ROW && res != SQLITE_DONE)
+        throw std::runtime_error{
+            "Failed to execute the step: "s + sqlite3_errstr(res)};
+
+    return res == SQLITE_ROW;
 }
 
 } // namespace lampobot::sqlite

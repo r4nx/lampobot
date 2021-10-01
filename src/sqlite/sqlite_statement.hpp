@@ -49,8 +49,10 @@ public:
         });
     }
 
-    bool bind_by_index(std::size_t param_index, int param);
-    bool bind_by_index(std::size_t param_index, double param);
+    bool bind_by_index(std::size_t param_index, int param) noexcept;
+    bool bind_by_index(std::size_t param_index, double param) noexcept;
+
+    bool step();
 
 protected:
     stmt_ptr_t stmt_{nullptr, &sqlite3_finalize};
