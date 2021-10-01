@@ -27,6 +27,13 @@ public:
     Statement(const Database &db, const std::string &sql);
 
     template <Bindable... Params>
+    Statement(const Database &db, const std::string &sql, Params &&...params)
+        : Statement{db, sql}
+    {
+        bind(std::forward<Params>(params)...);
+    }
+
+    template <Bindable... Params>
     bool bind(Params &&...params)
     {
         static_assert(
