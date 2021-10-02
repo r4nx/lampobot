@@ -15,7 +15,7 @@ Statement::Statement(const Database &db, const std::string &sql)
     sqlite3_stmt *raw_stmt = nullptr;
 
     if (int res = sqlite3_prepare_v2(
-            db.db_.get(),
+            db.get_ptr(),
             sql.c_str(),
             -1,
             &raw_stmt,
@@ -28,6 +28,11 @@ Statement::Statement(const Database &db, const std::string &sql)
     }
 
     stmt_.reset(raw_stmt);
+}
+
+sqlite3_stmt *Statement::get_ptr() const noexcept
+{
+    return stmt_.get();
 }
 
 bool Statement::bind_by_index(std::size_t param_index, int param) noexcept

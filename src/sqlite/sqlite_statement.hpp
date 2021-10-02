@@ -13,6 +13,8 @@
 
 namespace lampobot::sqlite {
 
+class Statement;
+
 template <typename T>
 concept Bindable = requires(Statement &stmt, std::size_t param_index, T &&param)
 {
@@ -32,6 +34,8 @@ public:
     {
         bind(std::forward<Params>(params)...);
     }
+
+    sqlite3_stmt *get_ptr() const noexcept;
 
     template <Bindable... Params>
     bool bind(Params &&...params)

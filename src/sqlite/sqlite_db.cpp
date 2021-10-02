@@ -27,4 +27,14 @@ Database::Database(const fs::path &db_file, int flags)
     db_.reset(raw_db);
 }
 
+sqlite3 *Database::get_ptr() const noexcept
+{
+    return db_.get();
+}
+
+int Database::get_error_code() const noexcept
+{
+    return sqlite3_extended_errcode(db_.get());
+}
+
 } // namespace lampobot::sqlite
