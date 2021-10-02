@@ -1,9 +1,9 @@
 #include "sqlite_statement.hpp"
+#include "sqlite_exception.hpp"
 
 #include <sqlite3.h>
 
 #include <cstddef>
-#include <stdexcept>
 #include <string>
 
 using namespace std::string_literals;
@@ -24,8 +24,7 @@ Statement::Statement(const Database &db, const std::string &sql)
     {
         sqlite3_finalize(raw_stmt);
 
-        throw std::runtime_error{
-            "Failed to prepare the statement: "s + sqlite3_errstr(res)};
+        throw SQLiteException{"Failed to prepare the statement", res};
     }
 
     stmt_.reset(raw_stmt);
@@ -46,8 +45,7 @@ bool Statement::step()
     const int res = sqlite3_step(stmt_.get());
 
     if (res != SQLITE_ROW && res != SQLITE_DONE)
-        throw std::runtime_error{
-            "Failed to execute the step: "s + sqlite3_errstr(res)};
+        throw SQLiteException{"Failed to execute the step", res};
 
     return res == SQLITE_ROW;
 }

@@ -1,9 +1,9 @@
 #include "sqlite_db.hpp"
+#include "sqlite_exception.hpp"
 
 #include <sqlite3.h>
 
 #include <filesystem>
-#include <stdexcept>
 #include <string>
 
 using namespace std::string_literals;
@@ -21,8 +21,7 @@ Database::Database(const fs::path &db_file, int flags)
     {
         sqlite3_close_v2(raw_db);
 
-        throw std::runtime_error{
-            "Failed to open the database: "s + sqlite3_errstr(res)};
+        throw SQLiteException{"Failed to open the database", res};
     }
 
     db_.reset(raw_db);

@@ -3,6 +3,8 @@ add_executable(lampobot
     "abstract_script.hpp"
     "lua_script.hpp"
     "lua_script.cpp"
+    "sqlite/sqlite_exception.hpp"
+    "sqlite/sqlite_exception.cpp"
     "sqlite/sqlite_db.hpp"
     "sqlite/sqlite_db.cpp"
     "sqlite/sqlite_statement.hpp"
