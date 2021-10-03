@@ -7,6 +7,8 @@ add_executable(lampobot
     "sqlite/sqlite_exception.cpp"
     "sqlite/sqlite_db.hpp"
     "sqlite/sqlite_db.cpp"
+    "sqlite/sqlite_column.hpp"
+    "sqlite/sqlite_column.cpp"
     "sqlite/sqlite_statement.hpp"
     "sqlite/sqlite_statement.cpp"
 )

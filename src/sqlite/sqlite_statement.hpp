@@ -1,6 +1,7 @@
 #ifndef LAMPOBOT_SQLITE_STATEMENT_HPP_
 #define LAMPOBOT_SQLITE_STATEMENT_HPP_
 
+#include "sqlite_column.hpp"
 #include "sqlite_db.hpp"
 
 #include <sqlite3.h>
@@ -8,7 +9,9 @@
 #include <algorithm> // std::all_of
 #include <cstddef>
 #include <memory>
+#include <optional>
 #include <string>
+#include <tuple>
 #include <utility> // std::forward
 
 namespace lampobot::sqlite {
@@ -57,6 +60,22 @@ public:
     bool bind_by_index(std::size_t param_index, double param) noexcept;
 
     bool step();
+
+    template <typename... Params>
+    std::optional<std::tuple<Params...>> get_columns()
+    {
+        if (get_columns_count() < sizeof...(Params))
+            return {};
+
+        std::size_t column_index = 0;
+        return {static_cast<Params>(column_by_index(column_index++))...};
+    }
+
+    Column column_by_index(std::size_t column_index) noexcept;
+    int    get_columns_count() const noexcept;
+
+    int reset() noexcept;
+    int clear_bindings() noexcept;
 
 protected:
     stmt_ptr_t stmt_{nullptr, &sqlite3_finalize};

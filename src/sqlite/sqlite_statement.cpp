@@ -55,4 +55,24 @@ bool Statement::step()
     return res == SQLITE_ROW;
 }
 
+Column Statement::column_by_index(std::size_t column_index) noexcept
+{
+    return Column{*this, column_index};
+}
+
+int Statement::get_columns_count() const noexcept
+{
+    return sqlite3_column_count(stmt_.get());
+}
+
+int Statement::reset() noexcept
+{
+    return sqlite3_reset(stmt_.get());
+}
+
+int Statement::clear_bindings() noexcept
+{
+    return sqlite3_clear_bindings(stmt_.get());
+}
+
 } // namespace lampobot::sqlite
