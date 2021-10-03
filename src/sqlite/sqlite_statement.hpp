@@ -8,11 +8,12 @@
 
 #include <algorithm> // std::all_of
 #include <cstddef>
+#include <cstdint>
 #include <memory>
 #include <optional>
 #include <string>
 #include <tuple>
-#include <utility> // std::forward
+#include <utility> // std::forward, std::pair
 
 namespace lampobot::sqlite {
 
@@ -57,7 +58,12 @@ public:
     }
 
     bool bind_by_index(std::size_t param_index, int param) noexcept;
+    bool bind_by_index(std::size_t param_index, std::int64_t param) noexcept;
     bool bind_by_index(std::size_t param_index, double param) noexcept;
+    bool bind_by_index(std::size_t param_index, const char *param) noexcept;
+    bool bind_by_index(
+        std::size_t                                 param_index,
+        const std::pair<const void *, std::size_t> &param) noexcept;
 
     bool step();
 

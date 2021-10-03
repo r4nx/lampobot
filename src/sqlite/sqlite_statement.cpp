@@ -4,7 +4,9 @@
 #include <sqlite3.h>
 
 #include <cstddef>
+#include <cstdint>
 #include <string>
+#include <utility> // std::pair
 
 using namespace std::string_literals;
 
@@ -40,9 +42,37 @@ bool Statement::bind_by_index(std::size_t param_index, int param) noexcept
     return sqlite3_bind_int(stmt_.get(), param_index, param) == SQLITE_OK;
 }
 
+bool Statement::bind_by_index(
+    std::size_t  param_index,
+    std::int64_t param) noexcept
+{
+    return sqlite3_bind_int64(stmt_.get(), param_index, param) == SQLITE_OK;
+}
+
 bool Statement::bind_by_index(std::size_t param_index, double param) noexcept
 {
     return sqlite3_bind_double(stmt_.get(), param_index, param) == SQLITE_OK;
+}
+
+bool Statement::bind_by_index(
+    std::size_t param_index,
+    const char *param) noexcept
+{
+    return sqlite3_bind_text(stmt_.get(), param_index, param, -1, SQLITE_STATIC)
+           == SQLITE_OK;
+}
+
+bool Statement::bind_by_index(
+    std::size_t                                 param_index,
+    const std::pair<const void *, std::size_t> &param) noexcept
+{
+    return sqlite3_bind_blob64(
+               stmt_.get(),
+               param_index,
+               param.first,
+               param.second,
+               SQLITE_STATIC)
+           == SQLITE_OK;
 }
 
 bool Statement::step()
