@@ -128,7 +128,8 @@ public:
      * SQLite types.
      */
     Column column_by_index(std::size_t column_index) noexcept;
-    int    get_columns_count() const noexcept;
+
+    int get_columns_count() const noexcept;
 
     /**
      * @brief Reset the statement to be able to be reused. Doesn't reset

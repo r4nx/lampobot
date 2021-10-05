@@ -3,7 +3,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <optional>
 #include <string>
 #include <utility> // std::pair
 
@@ -39,11 +38,9 @@ public:
     explicit operator double() const noexcept;
 
     /**
-     * @brief SQLite TEXT type analogue. May be std::nullopt in case if column
-     * contains NULL (as it's forbidden and meaningless to construct std::string
-     * from a nullptr).
+     * @brief SQLite TEXT type analogue.
      */
-    explicit operator std::optional<std::string>() const;
+    explicit operator const char *() const;
 
     /**
      * @brief SQLite BLOB type analogue. Returned pointer may be invalidated in
