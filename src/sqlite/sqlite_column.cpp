@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <utility> // std::pair
 
@@ -51,10 +52,12 @@ Column::operator double() const noexcept
     return sqlite3_column_double(stmt_.get_ptr(), index_);
 }
 
-Column::operator std::string() const
+Column::operator std::optional<std::string>() const
 {
-    return reinterpret_cast<const char *>(
+    const auto text = reinterpret_cast<const char *>(
         sqlite3_column_text(stmt_.get_ptr(), index_));
+
+    return text ? std::make_optional<std::string>(text) : std::nullopt;
 }
 
 Column::operator std::pair<const void *, std::size_t>() const noexcept

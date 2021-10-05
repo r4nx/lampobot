@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <optional>
 #include <string>
 #include <utility> // std::pair
 
@@ -21,7 +22,7 @@ public:
     explicit operator int() const noexcept;
     explicit operator std::int64_t() const noexcept;
     explicit operator double() const noexcept;
-    explicit operator std::string() const;
+    explicit operator std::optional<std::string>() const;
     explicit operator std::pair<const void *, std::size_t>() const noexcept;
 
 protected:
