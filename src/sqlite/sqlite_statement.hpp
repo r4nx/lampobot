@@ -3,10 +3,10 @@
 
 #include "sqlite_column.hpp"
 #include "sqlite_db.hpp"
+#include "sqlite_exception.hpp"
 
 #include <sqlite3.h>
 
-#include <algorithm> // std::all_of
 #include <cstddef>
 #include <cstdint>
 #include <memory>
@@ -59,31 +59,41 @@ public:
      * @brief Bind parameters to the statement.
      *
      * @param params Parameters to bind.
-     * @return bool, indicating the success in case if each call to
-     * sqlite3_bind_* returns SQLITE_OK
+     * @exception SQLiteException If one of the binding functions returns
+     * anything but SQLITE_OK
      */
     template <Bindable... Params>
-    bool bind(Params &&...params)
+    void bind(Params &&...params)
     {
         static_assert(
             sizeof...(Params) > 0,
             "You have to bind at least one parameter");
 
-        std::size_t param_index  = 1;
-        const auto  bind_results = {
-            bind_by_index(param_index++, std::forward<Params>(params))...};
+        auto bind_n_check = [this](int param_index, auto &&param) {
+            const int result = bind_by_index(
+                param_index,
+                std::forward<decltype(param)>(param));
 
-        return std::ranges::all_of(bind_results, [](const bool x) {
-            return x;
-        });
+            if (result != SQLITE_OK)
+                throw SQLiteException{
+                    "Failed to bind the parameter with index "
+                        + std::to_string(param_index),
+                    result};
+        };
+
+        int param_index = 1;
+        (bind_n_check(param_index++, std::forward<Params>(params)), ...);
     }
 
-    bool bind_by_index(std::size_t param_index, int param) noexcept;
-    bool bind_by_index(std::size_t param_index, std::int64_t param) noexcept;
-    bool bind_by_index(std::size_t param_index, double param) noexcept;
-    bool bind_by_index(std::size_t param_index, const char *param) noexcept;
-    bool bind_by_index(
-        std::size_t                                 param_index,
+    /**
+     * @return Raw SQLite return code, so are the rest of overloads.
+     */
+    int bind_by_index(int param_index, int param) noexcept;
+    int bind_by_index(int param_index, std::int64_t param) noexcept;
+    int bind_by_index(int param_index, double param) noexcept;
+    int bind_by_index(int param_index, const char *param) noexcept;
+    int bind_by_index(
+        int                                         param_index,
         const std::pair<const void *, std::size_t> &param) noexcept;
 
     /**
